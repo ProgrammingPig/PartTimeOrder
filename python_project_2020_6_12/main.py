@@ -62,51 +62,84 @@ def handle_insert_data(input_data):  # 数据插入函数
 
 
 def summary():  # 数据汇总函数
-    _time = input('请输入你要查看的收支数据月份（如2020-6）：\n')  # 用户输入要查询的时间
-    with open('data.csv', 'r', encoding='utf-8-sig') as f:  # 打开data.csv
-        data_list = f.readlines()  # 将所有行读取到data_list中
-    income_smamary = INCOME  # 为了防止不必要的错误，使用新变量保存收入字典，下同
-    expense_smmary = EXPENSE
-    total_income = 0  # 初始化总收入
-    total_expense = 0  # 初始化总支出
-    for data in data_list:  # 遍历所有行数据
-        if _time in data:  # 如果时间在行中，进入if
-            data_split = data.replace('\n', '').split(',')  # 将行中的换行符替换为空后用,分割
-            for i in INCOME:  # 遍历收入字典，目的为了获取其中的verbose_name方便后面显示
-                if data_split[0] == i:  # 如果分割后的行数据中的类别与收入字典中的verbose_name相同，进入if
-                    income_smamary[i]['amount'] += float(data_split[1])  # 对应类别金额增加
-                    total_income += float(data_split[1])  # 收入总金额增加
-                    break  # 如果找到了对应的类别就退出此次循环
-            for k in EXPENSE:  # 支出的处理方法与上面相同
-                if data_split[0] == k:
-                    expense_smmary[k]['amount'] += float(data_split[1])
-                    total_expense += float(data_split[1])
-                    break
-    print(_time.split('-')[0] + '年' + _time.split('-')[1] + '月' + '收支类别数据的汇总')
-    print('收入/支出' + '\t明细类别\t' + '\t金额')
-    for income in income_smamary:  # 遍历上面生成的收入数据字典
-        if income_smamary[income]['amount'] != 0:  # 若收入金额不为0则不显示
-            print('收入' + '\t\t' + income_smamary[income]['verbose_name'] + '\t\t' + str(
-                income_smamary[income]['amount']))  # 输出收入数据
-    for expense in expense_smmary:  # 与上面处理方法相同
-        if expense_smmary[expense]['amount'] != 0:
-            print('支出' + '\t\t' + expense_smmary[expense]['verbose_name'] + '\t\t' + str(
-                expense_smmary[expense]['amount']))
-    print(
-        _time.split('-')[0] + '年' + _time.split('-')[1] + '月的总收入为：' + str(total_income) + '，总支出为' + str(
-            total_expense))  # 打印总收入/支出
-    is_detail = input('是否输出该月的各笔明细（y为输出，其他为不输出）\n')  # 用户输入是否显示明细
-    if is_detail == 'y':  # 若显示明细
-        print('类别\t\t' + '收入/支出\t' + '发生日期\t\t' + '金额\t\t' + '备注')
-        new_data_list = []  # 初始化一个数据列表
-        for data in data_list:  # 遍历行数据
-            new_data_list.append(data.replace('\n', '').split(','))  # 将切割后形成的列表放到new_data_list中
-        for i in sorted(new_data_list, key=lambda d: float(d[1])):  # 用金额排序并遍历
-            if _time in i[3]:
-                try:  # 异常处理，若类别不在收入字典中，则执行except
-                    print(INCOME[i[0]]['verbose_name'] + '\t  收入\t\t' + i[3] + '\t\t' + i[1] + '\t\t' + i[2])
-                except Exception:
-                    print(EXPENSE[i[0]]['verbose_name'] + '\t  支出\t\t' + i[3] + '\t\t' + i[1] + '\t\t' + i[2])
+    input_value = input('1.按月份查看数据\n2.按时间段查看数据\n')
+    if input_value == '1':
+        _time = input('请输入你要查看的收支数据月份（如2020-6）：\n')  # 用户输入要查询的时间
+        with open('data.csv', 'r', encoding='utf-8-sig') as f:  # 打开data.csv
+            data_list = f.readlines()  # 将所有行读取到data_list中
+        income_smamary = INCOME  # 为了防止不必要的错误，使用新变量保存收入字典，下同
+        expense_smmary = EXPENSE
+        total_income = 0  # 初始化总收入
+        total_expense = 0  # 初始化总支出
+        for data in data_list:  # 遍历所有行数据
+            if _time in data:  # 如果时间在行中，进入if
+                data_split = data.replace('\n', '').split(',')  # 将行中的换行符替换为空后用,分割
+                for i in INCOME:  # 遍历收入字典，目的为了获取其中的verbose_name方便后面显示
+                    if data_split[0] == i:  # 如果分割后的行数据中的类别与收入字典中的verbose_name相同，进入if
+                        income_smamary[i]['amount'] += float(data_split[1])  # 对应类别金额增加
+                        total_income += float(data_split[1])  # 收入总金额增加
+                        break  # 如果找到了对应的类别就退出此次循环
+                for k in EXPENSE:  # 支出的处理方法与上面相同
+                    if data_split[0] == k:
+                        expense_smmary[k]['amount'] += float(data_split[1])
+                        total_expense += float(data_split[1])
+                        break
+        print(_time.split('-')[0] + '年' + _time.split('-')[1] + '月' + '收支类别数据的汇总')
+        print('收入/支出' + '\t明细类别\t' + '\t金额')
+        for income in income_smamary:  # 遍历上面生成的收入数据字典
+            if income_smamary[income]['amount'] != 0:  # 若收入金额不为0则不显示
+                print('收入' + '\t\t' + income_smamary[income]['verbose_name'] + '\t\t' + str(
+                    income_smamary[income]['amount']))  # 输出收入数据
+        for expense in expense_smmary:  # 与上面处理方法相同
+            if expense_smmary[expense]['amount'] != 0:
+                print('支出' + '\t\t' + expense_smmary[expense]['verbose_name'] + '\t\t' + str(
+                    expense_smmary[expense]['amount']))
+        print(
+            _time.split('-')[0] + '年' + _time.split('-')[1] + '月的总收入为：' + str(total_income) + '，总支出为' + str(
+                total_expense))  # 打印总收入/支出
+        is_detail = input('是否输出该月的各笔明细（y为输出，其他为不输出）\n')  # 用户输入是否显示明细
+        if is_detail == 'y':  # 若显示明细
+            print('类别\t\t' + '收入/支出\t' + '发生日期\t\t' + '金额\t\t' + '备注')
+            new_data_list = []  # 初始化一个数据列表
+            for data in data_list:  # 遍历行数据
+                new_data_list.append(data.replace('\n', '').split(','))  # 将切割后形成的列表放到new_data_list中
+            for i in sorted(new_data_list, key=lambda d: float(d[1])):  # 用金额排序并遍历
+                if _time in i[3]:
+                    try:  # 异常处理，若类别不在收入字典中，则执行except
+                        print(INCOME[i[0]]['verbose_name'] + '\t  收入\t\t' + i[3] + '\t\t' + i[1] + '\t\t' + i[2])
+                    except Exception:
+                        print(EXPENSE[i[0]]['verbose_name'] + '\t  支出\t\t' + i[3] + '\t\t' + i[1] + '\t\t' + i[2])
+    elif input_value == '2':
+        input_time = input('请输入时间区间，如2020-6 2020-8\n')
+        input_time_split = input_time.split(' ')
+        with open('data.csv', 'r', encoding='utf-8-sig') as f:  # 打开data.csv
+            data_list = f.readlines()  # 将所有行读取到data_list中
+        income_smamary = INCOME  # 为了防止不必要的错误，使用新变量保存收入字典，下同
+        expense_smmary = EXPENSE
+        total_income = 0  # 初始化总收入
+        total_expense = 0  # 初始化总支出
+        for data in data_list:  # 遍历所有行数据
+            if input_time_split[0].split('-')[0] in data:  # 若输入年份在行数据里
+                if (input_time_split[0].split('-')[1]) <= (data.replace('\n', '').split(',')[3].split('-')[1]) <= (
+                        input_time_split[1].split('-')[1]):  # 若行内的月份大于用户输入的最小月份，小于最小月份
+                    data_split = data.replace('\n', '').split(',')  # 将行中的换行符替换为空后用,分割
+                    for i in INCOME:  # 遍历收入字典，目的为了获取其中的verbose_name方便后面显示
+                        if data_split[0] == i:  # 如果分割后的行数据中的类别与收入字典中的verbose_name相同，进入if
+                            income_smamary[i]['amount'] += float(data_split[1])  # 对应类别金额增加
+                            total_income += float(data_split[1])  # 收入总金额增加
+                            break  # 如果找到了对应的类别就退出此次循环
+                    for k in EXPENSE:  # 支出的处理方法与上面相同
+                        if data_split[0] == k:
+                            expense_smmary[k]['amount'] += float(data_split[1])
+                            total_expense += float(data_split[1])
+                            break
+        print(
+            input_time_split[0].split('-')[0] + '年' + input_time_split[0].split('-')[1] + '月-' +
+            input_time_split[1].split('-')[0] + '年' + input_time_split[1].split('-')[1] + '的总收入为：' + str(
+                total_income) + '，总支出为' + str(
+                total_expense))  # 打印总收入/支出
+    else:
+        print('输入错误')
 
 
 def main():  # 主函数
