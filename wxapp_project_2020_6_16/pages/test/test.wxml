@@ -1,0 +1,12 @@
+<!--pages/index/takepic.wxml-->
+<button bindtap='uploadPhoto'>拍照选取照片上传</button>
+<view class="section">
+  <picker bindchange="bindPickerChange" value="{{index}}" range="{{nation_list}}">
+    <view class="picker">
+      当前选择：{{nation_list[index]}}
+    </view>
+  </picker>
+  </view>
+<view class='mergimg'>
+<image src='{{mergedurl}}'/>
+</view>

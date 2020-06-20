@@ -1,0 +1,11 @@
+/* pages/test/test.wxss */
+page {
+  color: inherit;
+}
+
+.section {
+  width: 50%;
+  height: 50rpx;
+  background-color: gray;
+  margin: 0 auto
+}
